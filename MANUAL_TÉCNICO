@@ -1,0 +1,191 @@
+# Sistema de Gerenciamento de Biblioteca Digital
+
+## 1. Visão Geral do Sistema
+
+Este sistema permite a gestão de documentos digitais (PDF, EPUB, MOBI, AZW, DOCX) em uma biblioteca universitária, oferecendo funcionalidades como:
+
+- Listar documentos por tipo e ano de publicação.
+- Adicionar, renomear e remover documentos.
+- Testes automatizados para validação das funcionalidades.
+- Integração com Git/GitHub para versionamento.
+- Execução direta no Google Colab.
+
+---
+
+## 2. Estrutura de Diretórios
+
+```text
+projetobiblioteca/
+├─ library_manager/
+│  ├─ core.py          # Funções principais de manipulação de arquivos
+│  └─ cli.py           # Interface de linha de comando
+├─ scripts/
+│  └─ generate_dummy_docs.py  # Script para gerar arquivos de teste
+├─ tests/
+│  └─ test_core.py     # Testes automatizados do core
+├─ newfolder/          # Pasta para envio ao GitHub
+└─ notebook.ipynb      # Notebook Colab principal
+````
+
+---
+
+## 3. Funcionalidades do Core (`library_manager/core.py`)
+
+### 3.1 `find_documents(root: str)`
+
+* Lista todos os arquivos suportados em um diretório e subdiretórios.
+* **Entrada:** `root` → diretório raiz.
+* **Saída:** Lista de objetos `Path`.
+
+### 3.2 `extract_year(path: Path)`
+
+* Extrai o ano de publicação/metadado do documento.
+* **Entrada:** `path` → caminho do arquivo.
+* **Saída:** Ano (`int`) ou `None`.
+* Suporte por tipo:
+
+  * PDF → `/CreationDate` ou `/ModDate`.
+  * DOCX → `core_properties.created`.
+  * EPUB → metadata `DC:date`.
+
+### 3.3 `list_by_type_and_year(root: str)`
+
+* Organiza arquivos por tipo (`.pdf`, `.epub`, etc.) e ano.
+* **Entrada:** Diretório raiz.
+* **Saída:** Dicionário `{tipo: {ano: [arquivos]}}`.
+
+### 3.4 `add_document(src_path: str, dest_dir: str)`
+
+* Copia um documento para outro diretório.
+* **Entrada:**
+
+  * `src_path` → arquivo de origem
+  * `dest_dir` → diretório de destino
+* **Saída:** Caminho final do arquivo copiado.
+
+### 3.5 `rename_document(path: str, new_name: str)`
+
+* Renomeia um arquivo existente.
+* **Entrada:**
+
+  * `path` → caminho original
+  * `new_name` → novo nome do arquivo
+* **Saída:** Novo caminho do arquivo.
+
+### 3.6 `remove_document(path: str)`
+
+* Remove um arquivo do sistema.
+* **Entrada:** `path` → caminho do arquivo.
+* **Saída:** `True` se removido, `False` caso não exista.
+
+---
+
+## 4. Interface de Linha de Comando (CLI) (`library_manager/cli.py`)
+
+| Comando                    | Descrição                       | Exemplo                                                                 |
+| -------------------------- | ------------------------------- | ----------------------------------------------------------------------- |
+| `list <root>`              | Lista arquivos por tipo e ano   | `python -m library_manager.cli list sample_docs`                        |
+| `add <src> <dest>`         | Adiciona arquivo a um diretório | `python -m library_manager.cli add sample.pdf sample_store/`            |
+| `rename <path> <new_name>` | Renomeia arquivo                | `python -m library_manager.cli rename sample_store/sample.pdf novo.pdf` |
+| `remove <path>`            | Remove arquivo                  | `python -m library_manager.cli remove sample_store/novo.pdf`            |
+
+> Todos os caminhos podem ser relativos ou absolutos.
+
+---
+
+## 5. Scripts de Apoio
+
+### 5.1 `scripts/generate_dummy_docs.py`
+
+* Gera arquivos de teste aleatórios em PDF, EPUB, DOCX, MOBI e AZW.
+* Cria diretório `sample_docs/` com arquivos de teste.
+* **Uso:**
+
+```bash
+!python scripts/generate_dummy_docs.py
+```
+
+---
+
+## 6. Testes Automatizados (`tests/test_core.py`)
+
+* Valida funcionalidades principais: `add_document`, `rename_document`, `remove_document`, `list_by_type_and_year`.
+* **Como rodar no Colab:**
+
+```python
+import sys
+from pathlib import Path
+sys.path.append(str(Path.cwd()))
+!pytest -q
+```
+
+---
+
+## 7. Integração com Git/GitHub
+
+### Branch, Commit e Push
+
+```bash
+!git checkout -b feature/colab_setup
+!git add .
+!git commit -m "feat: inicializar projeto"
+!git push origin feature/colab_setup
+```
+
+### Criação de Pull Request via GitHub CLI
+
+```bash
+!gh pr create --title "Feature: Configuração Colab + CLI + testes" \
+              --body "Inclui core, CLI, scripts e testes" \
+              --base main \
+              --head feature/colab_setup \
+              --reviewer dallacortejr
+```
+
+### Envio automático para nova pasta (`newfolder`) usando Python + token
+
+* Permite enviar todos os arquivos do Colab diretamente para o repositório existente.
+
+---
+
+## 8. Manual de Execução no Google Colab
+
+1. Clone o repositório:
+
+```python
+!git clone https://github.com/dallacortejr/projetobiblioteca.git
+%cd projetobiblioteca
+```
+
+2. Instale dependências:
+
+```python
+!pip install PyPDF2 python-docx ebooklib fpdf click pytest python-dateutil
+!sudo apt-get install gh -y
+```
+
+3. Execute o notebook passo a passo:
+
+   * Geração de arquivos de teste
+   * Testes automatizados
+   * Operações CLI
+   * Commit e push para GitHub
+
+---
+
+## 9. Boas Práticas
+
+* Use **pastas separadas** (`sample_docs`, `sample_store`, `newfolder`) para evitar sobrescrever arquivos originais.
+* Sempre execute **testes automatizados** antes de fazer commits.
+* Para adicionar novos documentos, utilize `add_document` ou `add` no CLI.
+* Para remover ou renomear, use `remove_document`/`rename_document` ou os comandos CLI correspondentes.
+
+---
+
+## 10. Contato
+
+**Desenvolvedor:** Luiz Dallacorte Jr
+**E-mail:** [dallacortejr@gmail.com](mailto:dallacortejr@gmail.com)
+**Repositório:** [https://github.com/dallacortejr/projetobiblioteca](https://github.com/dallacortejr/projetobiblioteca)
+
+```
