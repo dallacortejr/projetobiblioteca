@@ -1,0 +1,24 @@
+[
+    {
+        "id": "ex001",
+        "titulo": "Introdução à Ciência de Dados",
+        "autores": "Equipe Biblioteca Universitária",
+        "ano_publicacao": 2024,
+        "tipo_documento": "Livro digital",
+        "extensao": ".txt",
+        "arquivo": "introducao_ciencia_de_dados.txt",
+        "caminho": "documentos/introducao_ciencia_de_dados.txt",
+        "data_cadastro": "2026-06-21 00:00:00"
+    },
+    {
+        "id": "ex002",
+        "titulo": "Boas Práticas em Pesquisa Acadêmica",
+        "autores": "Biblioteca Central",
+        "ano_publicacao": 2023,
+        "tipo_documento": "Artigo",
+        "extensao": ".txt",
+        "arquivo": "boas_praticas_pesquisa_academica.txt",
+        "caminho": "documentos/boas_praticas_pesquisa_academica.txt",
+        "data_cadastro": "2026-06-21 00:00:00"
+    }
+]
