@@ -1,0 +1,3 @@
+Documento de exemplo: Introdução à Ciência de Dados.
+
+Este arquivo demonstra a manipulação real de documentos digitais pelo sistema.
